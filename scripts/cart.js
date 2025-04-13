@@ -1,6 +1,6 @@
-const cart = [];
+export const cart = [];
 
-function findCartProduct(productId) {
+export function findCartProduct(productId) {
   let cartProduct = "";
   cart.forEach((cartItem) => {
     if (cartItem.productId === productId) cartProduct = cartItem;
@@ -8,7 +8,7 @@ function findCartProduct(productId) {
   return cartProduct;
 }
 
-function countCartProduct() {
+export function countCartProduct() {
   let cartQuantity = 0;
   cart.forEach((cartItem) => {
     cartQuantity += cartItem.quantity;
