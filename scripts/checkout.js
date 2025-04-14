@@ -14,7 +14,7 @@ function renderOrderSummaryHTML() {
     const cartProduct = findProduct(cartItem.id);
     //console.log(cartProduct);
     orderSummaryHtml += `
-  <div class="cart-item-container">
+  <div class="cart-item-container js-cart-item-container-${cartItem.id}">
     <div class="delivery-date">Delivery date: Tuesday, June 21</div>
   
     <div class="cart-item-details-grid">
@@ -96,6 +96,7 @@ document.querySelectorAll(".js-delete-btn").forEach((btn) => {
     const { productId } = btn.dataset;
     removeFromCart(productId);
     //renderOrderSummaryHTML();
+    document.querySelector(`.js-cart-item-container-${productId}`).remove();
   });
 });
 //console.log(orderSummaryHtml);
