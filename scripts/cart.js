@@ -1,36 +1,57 @@
-export const cart = JSON.parse(localStorage.getItem("cart")) || [];
+export let cart = [
+  {
+    id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
+    quantity: 2,
+  },
+  {
+    id: "15b6fc6f-327a-4ec4-896f-486349e85a3d",
+    quantity: 1,
+  },
+];
 let showAddedTimeoutId = 0;
 let previousBtnId = "";
-updateCartQuantity();
 
-export function addToCart(productName, productId) {
-  const cartProduct = findCartProduct(productId);
+export function addToCart(id) {
+  const cartItem = findCartItem(id);
+  //console.log(cartItem);
   const quantitySelector = Number(
-    document.querySelector(`.js-quantity-selector-${productId}`).value
+    document.querySelector(`.js-quantity-selector-${id}`).value
   );
 
-  if (!cartProduct) {
+  if (!cartItem) {
     cart.push({
-      productId,
-      productName,
+      id,
       quantity: quantitySelector,
     });
   } else {
-    cartProduct.quantity += quantitySelector;
+    cartItem.quantity += quantitySelector;
   }
 
-  showAddedToCart(productId);
+  showAddedToCart(id);
   updateCartQuantity();
   console.log(cart);
   localStorage.setItem("cart", JSON.stringify(cart));
 }
 
-function findCartProduct(productId) {
-  let cartProduct = "";
+export function removeFromCart(id) {
+  let newCart = [];
   cart.forEach((cartItem) => {
-    if (cartItem.productId === productId) cartProduct = cartItem;
+    if (cartItem.id != id) newCart.push(cartItem);
   });
-  return cartProduct;
+  cart = newCart;
+  //renderOrderSummaryHTML();
+  //updateCartQuantity();
+  console.log(cart);
+}
+
+export function findCartItem(id) {
+  let matchingItem = "";
+  cart.forEach((cartItem, cartIndex) => {
+    if (cartItem.id === id) {
+      matchingItem = cartItem;
+    }
+  });
+  return matchingItem;
 }
 
 function showAddedToCart(productId) {
@@ -45,11 +66,12 @@ function showAddedToCart(productId) {
   }, 1000);
 }
 
-function updateCartQuantity() {
+export function updateCartQuantity() {
   let cartQuantity = 0;
   cart.forEach((cartItem) => {
     cartQuantity += cartItem.quantity;
   });
   document.querySelector(".js-cart-quantity").innerHTML = cartQuantity;
   localStorage.setItem("cartQuantity", JSON.stringify(cartQuantity));
+  return cartQuantity;
 }
