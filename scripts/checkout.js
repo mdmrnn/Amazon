@@ -1,13 +1,12 @@
-import {
-  cart,
-  // findCartItem,
-  // updateCartQuantity,
-  removeFromCart,
-} from "./cart.js";
+import { cart, cartQuantity, removeFromCart, updateQuantity } from "./cart.js";
 import { formatCurrency } from "./utils/money.js";
 import { findProduct } from "../data/products.js";
 renderOrderSummaryHTML();
-//const cartQuantity = Number(cartModule.updateCartQuantity());
+
+document.querySelector(
+  ".js-return-to-home-quantity"
+).innerHTML = `${cartQuantity} items`;
+
 function renderOrderSummaryHTML() {
   let orderSummaryHtml = ``;
   cart.forEach((cartItem) => {
@@ -31,12 +30,20 @@ function renderOrderSummaryHTML() {
           cartProduct.priceCents
         )}</div>
         <div class="product-quantity">
-          <span> Quantity: <span class="quantity-label">${
-            cartItem.quantity
-          }</span> </span>
-          <span class="update-quantity-link link-primary js-update-btn">
+          <span> Quantity: <span class="quantity-label js-quantity-label-${
+            cartItem.id
+          } ">${cartItem.quantity}</span> </span>
+          <span class="update-quantity-link link-primary js-update-btn" data-product-id = "${
+            cartItem.id
+          }">
             Update
           </span>
+          <input class="js-quantity-input js-quantity-input-${
+            cartItem.id
+          }" data-product-id = "${cartItem.id}">
+          <span class="js-save-quantity-link link-primary" data-product-id = "${
+            cartItem.id
+          }">Save</span>
           <span class="delete-quantity-link link-primary js-delete-btn" data-product-id = "${
             cartItem.id
           }">
@@ -95,11 +102,77 @@ document.querySelectorAll(".js-delete-btn").forEach((btn) => {
   btn.addEventListener("click", () => {
     const { productId } = btn.dataset;
     removeFromCart(productId);
+    document.querySelector(
+      ".js-return-to-home-quantity"
+    ).innerHTML = `${cartQuantity} items`;
     //renderOrderSummaryHTML();
     document.querySelector(`.js-cart-item-container-${productId}`).remove();
   });
 });
-//console.log(orderSummaryHtml);
+
+document.querySelectorAll(".js-update-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const { productId } = btn.dataset;
+    document
+      .querySelector(`.js-cart-item-container-${productId}`)
+      .classList.add("is-edditing-quantity");
+    //renderOrderSummaryHTML();
+  });
+});
+
+document.querySelectorAll(".js-save-quantity-link").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const { productId } = btn.dataset;
+    const updateQuan = document.querySelector(
+      `.js-quantity-input-${productId}`
+    ).value;
+    if (updateQuan >= 0 && updateQuan <= 1000) {
+      updateQuantity(productId, updateQuan);
+      document.querySelector(`.js-quantity-label-${productId}`).innerHTML =
+        updateQuan;
+      document.querySelector(
+        ".js-return-to-home-quantity"
+      ).innerHTML = `${cartQuantity} items`;
+      document
+        .querySelector(`.js-cart-item-container-${productId}`)
+        .classList.remove("is-edditing-quantity");
+    } else {
+      document.querySelector(`.js-quantity-label-${productId}`).innerHTML =
+        "Not a Valid Quantity";
+      document
+        .querySelector(`.js-cart-item-container-${productId}`)
+        .classList.remove("is-edditing-quantity");
+    }
+  });
+});
+
+document.querySelectorAll(".js-quantity-input").forEach((inp) => {
+  inp.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      const { productId } = inp.dataset;
+      const updateQuan = document.querySelector(
+        `.js-quantity-input-${productId}`
+      ).value;
+      if (updateQuan >= 0 && updateQuan <= 1000) {
+        updateQuantity(productId, updateQuan);
+        document.querySelector(`.js-quantity-label-${productId}`).innerHTML =
+          updateQuan;
+        document.querySelector(
+          ".js-return-to-home-quantity"
+        ).innerHTML = `${cartQuantity} items`;
+        document
+          .querySelector(`.js-cart-item-container-${productId}`)
+          .classList.remove("is-edditing-quantity");
+      } else {
+        document.querySelector(`.js-quantity-label-${productId}`).innerHTML =
+          "Not a Valid Quantity";
+        document
+          .querySelector(`.js-cart-item-container-${productId}`)
+          .classList.remove("is-edditing-quantity");
+      }
+    }
+  });
+});
 
 /*const cartItemsCost = Number(calcCartItemsCost());
 const shippingCost = Number(4.99);
@@ -139,9 +212,4 @@ document.querySelector(".js-payment-summary").innerHTML = `
     Place your order
   </button>
 `;
-*/
-//const cartQuantity = cartModule.updateCartQuantity;
-/*document.querySelector(
-  ".js-return-to-home-quantity"
-).innerHTML = `${cartQuantity} items`;
 */

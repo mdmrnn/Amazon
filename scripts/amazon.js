@@ -61,10 +61,17 @@ products.forEach((product) => {
 //cartModule.updateCartQuantity();
 document.querySelector(".js-products-grid").innerHTML = ProductsHTML;
 
+document.querySelector(
+  ".js-cart-quantity"
+).innerHTML = `${cartModule.cartQuantity}`;
+
 document.querySelectorAll(".js-add-to-cart-btn").forEach((button) => {
   button.addEventListener("click", () => {
     const { productId } = button.dataset;
     cartModule.addToCart(productId);
+    document.querySelector(
+      ".js-cart-quantity"
+    ).innerHTML = `${cartModule.cartQuantity}`;
   });
 });
 
