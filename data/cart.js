@@ -1,11 +1,15 @@
+import { delivaryOptions } from "./delivaryOptions.js";
+
 export let cart = JSON.parse(localStorage.getItem("cart")) || [
   {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
     quantity: 2,
+    delivaryOptionId: "1",
   },
   {
     id: "15b6fc6f-327a-4ec4-896f-486349e85a3d",
     quantity: 1,
+    delivaryOptionId: "2",
   },
 ];
 let showAddedTimeoutId = 0;
@@ -24,6 +28,7 @@ export function addToCart(id) {
     cart.push({
       id,
       quantity: quantitySelector,
+      delivaryOptionId: "1",
     });
   } else {
     cartItem.quantity += quantitySelector;

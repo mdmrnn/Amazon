@@ -1,4 +1,4 @@
-import * as cartModule from "../scripts/cart.js";
+import * as cartModule from "../data/cart.js";
 import { products, findProduct } from "../data/products.js";
 import { formatCurrency } from "./utils/money.js";
 

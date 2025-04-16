@@ -1,27 +1,35 @@
-import { cart, cartQuantity, removeFromCart, updateQuantity } from "./cart.js";
+import {
+  cart,
+  cartQuantity,
+  removeFromCart,
+  updateQuantity,
+} from "../data/cart.js";
 import { formatCurrency } from "./utils/money.js";
 import { findProduct } from "../data/products.js";
-renderOrderSummaryHTML();
+import { delivaryOptions } from "../data/delivaryOptions.js";
+import dayjs from "https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js";
 
 document.querySelector(
   ".js-return-to-home-quantity"
 ).innerHTML = `${cartQuantity} items`;
 
-function renderOrderSummaryHTML() {
+createOrderSummaryHTML();
+
+function createOrderSummaryHTML() {
   let orderSummaryHtml = ``;
   cart.forEach((cartItem) => {
     const cartProduct = findProduct(cartItem.id);
     //console.log(cartProduct);
     orderSummaryHtml += `
   <div class="cart-item-container js-cart-item-container-${cartItem.id}">
-    <div class="delivery-date">Delivery date: Tuesday, June 21</div>
-  
+    <div class="delivery-date">Delivery date:${createDelivaryDate(
+      cartItem
+    )}</div>  
     <div class="cart-item-details-grid">
       <img
         class="product-image"
         src="${cartProduct.image}"
-      />
-  
+      /> 
       <div class="cart-item-details">
         <div class="product-name">
           ${cartProduct.name}
@@ -51,51 +59,59 @@ function renderOrderSummaryHTML() {
           </span>
         </div>
       </div>
-  
       <div class="delivery-options">
         <div class="delivery-options-title">
           Choose a delivery option:
         </div>
-        <div class="delivery-option">
-          <input
-            type="radio"
-            checked
-            class="delivery-option-input"
-            name="delivery-option-${cartItem.id}"
-          />
-          <div>
-            <div class="delivery-option-date">Tuesday, June 21</div>
-            <div class="delivery-option-price">FREE Shipping</div>
-          </div>
-        </div>
-        <div class="delivery-option">
-          <input
-            type="radio"
-            class="delivery-option-input"
-            name="delivery-option-${cartItem.id}"
-          />
-          <div>
-            <div class="delivery-option-date">Wednesday, June 15</div>
-            <div class="delivery-option-price">$4.99 - Shipping</div>
-          </div>
-        </div>
-        <div class="delivery-option">
-          <input
-            type="radio"
-            class="delivery-option-input"
-            name="delivery-option-${cartItem.id}"
-          />
-          <div>
-            <div class="delivery-option-date">Monday, June 13</div>
-            <div class="delivery-option-price">$9.99 - Shipping</div>
-          </div>
-        </div>
+          ${createDelivaryOptionsHTML(cartItem)}
+      </div>
       </div>
     </div>
   </div>
   `;
   });
   document.querySelector(".js-order-summary").innerHTML = orderSummaryHtml;
+}
+
+function createDelivaryDate(cartItem) {
+  const today = dayjs();
+  let delivaryDays = "";
+  delivaryOptions.forEach((delivaryOption) => {
+    if (delivaryOption.id === cartItem.delivaryOptionId)
+      delivaryDays = delivaryOption.delivaryDays;
+  });
+  const delivaryDate = today.add(delivaryDays, "days").format("dddd, MMMM D");
+  return delivaryDate;
+}
+
+function createDelivaryOptionsHTML(cartItem) {
+  let delivaryOptionsHtml = ``;
+  delivaryOptions.forEach((delivaryOption) => {
+    const today = dayjs();
+    const delivaryDate = today
+      .add(delivaryOption.delivaryDays, "days")
+      .format("dddd, MMMM D");
+    let delivaryPrice = "";
+    if (delivaryOption.id === "1") delivaryPrice = "FREE";
+    else delivaryPrice = `$${formatCurrency(delivaryOption.priceCents)} -`;
+    let isChecked = "";
+    if (delivaryOption.id === cartItem.delivaryOptionId) isChecked = "checked";
+    delivaryOptionsHtml += `
+    <div class="delivery-option">
+      <input
+        type="radio"
+        ${isChecked}
+        class="delivery-option-input"
+        name="delivery-option-${cartItem.id}"
+      />
+      <div>
+        <div class="delivery-option-date">${delivaryDate}</div>
+        <div class="delivery-option-price">${delivaryPrice} Shipping</div>
+      </div>
+    </div>
+  `;
+  });
+  return delivaryOptionsHtml;
 }
 
 document.querySelectorAll(".js-delete-btn").forEach((btn) => {
@@ -123,10 +139,10 @@ document.querySelectorAll(".js-update-btn").forEach((btn) => {
 document.querySelectorAll(".js-save-quantity-link").forEach((btn) => {
   btn.addEventListener("click", () => {
     const { productId } = btn.dataset;
-    const updateQuan = document.querySelector(
-      `.js-quantity-input-${productId}`
-    ).value;
-    if (updateQuan >= 0 && updateQuan <= 1000) {
+    const updateQuan = Number(
+      document.querySelector(`.js-quantity-input-${productId}`).value
+    );
+    if (updateQuan > 0 && updateQuan <= 1000) {
       updateQuantity(productId, updateQuan);
       document.querySelector(`.js-quantity-label-${productId}`).innerHTML =
         updateQuan;
@@ -136,6 +152,13 @@ document.querySelectorAll(".js-save-quantity-link").forEach((btn) => {
       document
         .querySelector(`.js-cart-item-container-${productId}`)
         .classList.remove("is-edditing-quantity");
+    } else if (updateQuan === 0) {
+      removeFromCart(productId);
+      document.querySelector(
+        ".js-return-to-home-quantity"
+      ).innerHTML = `${cartQuantity} items`;
+      //renderOrderSummaryHTML();
+      document.querySelector(`.js-cart-item-container-${productId}`).remove();
     } else {
       document.querySelector(`.js-quantity-label-${productId}`).innerHTML =
         "Not a Valid Quantity";
@@ -150,10 +173,10 @@ document.querySelectorAll(".js-quantity-input").forEach((inp) => {
   inp.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
       const { productId } = inp.dataset;
-      const updateQuan = document.querySelector(
-        `.js-quantity-input-${productId}`
-      ).value;
-      if (updateQuan >= 0 && updateQuan <= 1000) {
+      const updateQuan = Number(
+        document.querySelector(`.js-quantity-input-${productId}`).value
+      );
+      if (updateQuan > 0 && updateQuan <= 1000) {
         updateQuantity(productId, updateQuan);
         document.querySelector(`.js-quantity-label-${productId}`).innerHTML =
           updateQuan;
@@ -163,6 +186,13 @@ document.querySelectorAll(".js-quantity-input").forEach((inp) => {
         document
           .querySelector(`.js-cart-item-container-${productId}`)
           .classList.remove("is-edditing-quantity");
+      } else if (updateQuan === 0) {
+        removeFromCart(productId);
+        document.querySelector(
+          ".js-return-to-home-quantity"
+        ).innerHTML = `${cartQuantity} items`;
+        //renderOrderSummaryHTML();
+        document.querySelector(`.js-cart-item-container-${productId}`).remove();
       } else {
         document.querySelector(`.js-quantity-label-${productId}`).innerHTML =
           "Not a Valid Quantity";
