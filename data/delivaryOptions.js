@@ -1,10 +1,10 @@
 export function findDelivaryOption(delivaryOptionId) {
-  let matchingDelivaryOption = "";
+  let matchingDelivaryOption = delivaryOptions[0];
   delivaryOptions.forEach((delivaryOption) => {
     if (delivaryOption.id === delivaryOptionId)
       matchingDelivaryOption = delivaryOption;
   });
-  return matchingDelivaryOption;
+  return matchingDelivaryOption || delivaryOptions[0];
 }
 
 export const delivaryOptions = [

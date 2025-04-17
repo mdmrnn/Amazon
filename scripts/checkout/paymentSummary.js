@@ -4,58 +4,56 @@ import { formatCurrency } from "../utils/money.js";
 import { findDelivaryOption } from "../../data/delivaryOptions.js";
 
 export function renderPaymentSummary() {
-  const cartItems = calcItemsCost();
-  const shipping = calcShippingCost();
-  const beforeTax = calcItemsCost() + calcShippingCost();
-  const Tax = (beforeTax / 10).toFixed(2);
-  const Order = (Number(beforeTax) + Number(Tax)).toFixed(2);
+  const itemsCents = calcItemsCost();
+  const shippingCents = calcShippingCost();
+  const beforeTaxCents = calcItemsCost() + calcShippingCost();
+  const taxCents = beforeTaxCents * 0.1;
+  const orderCents = beforeTaxCents + taxCents;
   let paymentSummaryHtml = `
   <div class="payment-summary-row">
     <div>Items (${cartQuantity}):</div>
-    <div class="payment-summary-money">$${cartItems}</div>
+    <div class="payment-summary-money">$${formatCurrency(itemsCents)}</div>
   </div>
 
   <div class="payment-summary-row">
     <div>Shipping &amp; handling:</div>
-    <div class="payment-summary-money">$${shipping}</div>
+    <div class="payment-summary-money">$${formatCurrency(shippingCents)}</div>
   </div>
 
   <div class="payment-summary-row subtotal-row">
     <div>Total before tax:</div>
-    <div class="payment-summary-money">$${beforeTax}</div>
+    <div class="payment-summary-money">$${formatCurrency(beforeTaxCents)}</div>
   </div>
 
   <div class="payment-summary-row">
     <div>Estimated tax (10%):</div>
-    <div class="payment-summary-money">$${Tax}</div>
+    <div class="payment-summary-money">$${formatCurrency(taxCents)}</div>
   </div>
 
   <div class="payment-summary-row total-row">
     <div>Order total:</div>
-    <div class="payment-summary-money">$${Order}</div>
+    <div class="payment-summary-money">$${formatCurrency(orderCents)}</div>
   </div>
   `;
   document.querySelector(".js-payment-summary").innerHTML = paymentSummaryHtml;
 }
 
 function calcItemsCost() {
-  let cartItemsCost = 0;
+  let itemsCostCents = 0;
   cart.forEach((cartItem) => {
     const cartProduct = findProduct(cartItem.id);
-    cartItemsCost += Number(
-      formatCurrency(cartProduct.priceCents * cartItem.quantity)
-    );
+    itemsCostCents += cartProduct.priceCents * cartItem.quantity;
   });
-  return cartItemsCost;
+  return itemsCostCents;
 }
 
 function calcShippingCost() {
-  let cartShippingCost = 0;
+  let shippingCostCents = 0;
   cart.forEach((cartItem) => {
     const cartDelivaryOption = findDelivaryOption(cartItem.delivaryOptionId);
-    cartShippingCost += Number(formatCurrency(cartDelivaryOption.priceCents));
+    shippingCostCents += cartDelivaryOption.priceCents;
   });
-  return cartShippingCost;
+  return shippingCostCents;
 }
 /*
 const cartItemsCost = Number(calcCartItemsCost());
