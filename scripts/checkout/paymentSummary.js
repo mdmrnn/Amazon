@@ -8,7 +8,7 @@ export function renderPaymentSummary() {
   const shipping = calcShippingCost();
   const beforeTax = calcItemsCost() + calcShippingCost();
   const Tax = (beforeTax / 10).toFixed(2);
-  const Order = Number(beforeTax) + Number(Tax);
+  const Order = (Number(beforeTax) + Number(Tax)).toFixed(2);
   let paymentSummaryHtml = `
   <div class="payment-summary-row">
     <div>Items (${cartQuantity}):</div>

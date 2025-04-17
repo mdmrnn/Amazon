@@ -11,12 +11,11 @@ import { delivaryOptions } from "../../data/delivaryOptions.js";
 import dayjs from "https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js";
 import { renderPaymentSummary } from "./paymentSummary.js";
 
-document.querySelector(
-  ".js-return-to-home-quantity"
-).innerHTML = `${cartQuantity} items`;
-
 export function renderOrderSummary() {
   let orderSummaryHtml = ``;
+  document.querySelector(
+    ".js-return-to-home-quantity"
+  ).innerHTML = `${cartQuantity} items`;
   cart.forEach((cartItem) => {
     const cartProduct = findProduct(cartItem.id);
     orderSummaryHtml += `
@@ -119,10 +118,7 @@ export function renderOrderSummary() {
     btn.addEventListener("click", () => {
       const { productId } = btn.dataset;
       removeFromCart(productId);
-      document.querySelector(
-        ".js-return-to-home-quantity"
-      ).innerHTML = `${cartQuantity} items`;
-      document.querySelector(`.js-cart-item-container-${productId}`).remove();
+      renderOrderSummary();
       renderPaymentSummary();
     });
   });
@@ -142,21 +138,14 @@ export function renderOrderSummary() {
       );
       if (updateQuan > 0 && updateQuan <= 1000) {
         updateQuantity(productId, updateQuan);
-        document.querySelector(`.js-quantity-label-${productId}`).innerHTML =
-          updateQuan;
-        document.querySelector(
-          ".js-return-to-home-quantity"
-        ).innerHTML = `${cartQuantity} items`;
+        renderOrderSummary();
+        renderPaymentSummary();
         document
           .querySelector(`.js-cart-item-container-${productId}`)
           .classList.remove("is-edditing-quantity");
-        renderPaymentSummary();
       } else if (updateQuan === 0) {
         removeFromCart(productId);
-        document.querySelector(
-          ".js-return-to-home-quantity"
-        ).innerHTML = `${cartQuantity} items`;
-        document.querySelector(`.js-cart-item-container-${productId}`).remove();
+        renderOrderSummary();
         renderPaymentSummary();
       } else {
         document.querySelector(`.js-quantity-label-${productId}`).innerHTML =
@@ -176,23 +165,14 @@ export function renderOrderSummary() {
         );
         if (updateQuan > 0 && updateQuan <= 1000) {
           updateQuantity(productId, updateQuan);
-          document.querySelector(`.js-quantity-label-${productId}`).innerHTML =
-            updateQuan;
-          document.querySelector(
-            ".js-return-to-home-quantity"
-          ).innerHTML = `${cartQuantity} items`;
+          renderOrderSummary();
+          renderPaymentSummary();
           document
             .querySelector(`.js-cart-item-container-${productId}`)
             .classList.remove("is-edditing-quantity");
-          renderPaymentSummary();
         } else if (updateQuan === 0) {
           removeFromCart(productId);
-          document.querySelector(
-            ".js-return-to-home-quantity"
-          ).innerHTML = `${cartQuantity} items`;
-          document
-            .querySelector(`.js-cart-item-container-${productId}`)
-            .remove();
+          renderOrderSummary();
           renderPaymentSummary();
         } else {
           document.querySelector(`.js-quantity-label-${productId}`).innerHTML =
