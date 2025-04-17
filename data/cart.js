@@ -30,13 +30,9 @@ export function updateDelivaryOption(productId, delivaryOptionId) {
 
 export function addToCart(id) {
   const cartItem = findCartItem(id);
-  //console.log(cartItem);
-  let quantitySelector = 0;
-  if (document.querySelector(`.js-quantity-selector-${id}`))
-    quantitySelector = Number(
-      document.querySelector(`.js-quantity-selector-${id}`).value
-    );
-  else quantitySelector = 1;
+  const quantitySelector = Number(
+    document.querySelector(`.js-quantity-selector-${id}`).value
+  );
 
   if (!cartItem) {
     cart.push({
@@ -74,19 +70,15 @@ export function findCartItem(id) {
 }
 
 function showAddedToCart(productId) {
-  if (document.querySelector(`.js-added-to-cart-${productId}`)) {
-    const addedToCart = document.querySelector(
-      `.js-added-to-cart-${productId}`
-    );
-    addedToCart.classList.add("js-show-added");
-    if (previousBtnId === productId) {
-      clearTimeout(showAddedTimeoutId);
-    }
-    previousBtnId = productId;
-    showAddedTimeoutId = setTimeout(() => {
-      addedToCart.classList.remove("js-show-added");
-    }, 1000);
+  const addedToCart = document.querySelector(`.js-added-to-cart-${productId}`);
+  addedToCart.classList.add("js-show-added");
+  if (previousBtnId === productId) {
+    clearTimeout(showAddedTimeoutId);
   }
+  previousBtnId = productId;
+  showAddedTimeoutId = setTimeout(() => {
+    addedToCart.classList.remove("js-show-added");
+  }, 1000);
 }
 
 export function updateCartQuantity() {

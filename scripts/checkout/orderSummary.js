@@ -13,13 +13,16 @@ import {
 } from "../../data/delivaryOptions.js";
 import { renderPaymentSummary } from "./paymentSummary.js";
 import renderCheckoutHeader from "./header.js";
+
 export function renderOrderSummary() {
   let orderSummaryHtml = ``;
 
   cart.forEach((cartItem) => {
     const cartProduct = findProduct(cartItem.id);
     orderSummaryHtml += `
-  <div class="cart-item-container js-cart-item-container-${cartItem.id}">
+  <div class="cart-item-container js-cart-item-container js-cart-item-container-${
+    cartItem.id
+  }">
     <div class="delivery-date">Delivery date:${createDelivaryDateCartItem(
       cartItem
     )}</div>  
@@ -35,7 +38,7 @@ export function renderOrderSummary() {
         <div class="product-price">$${formatCurrency(
           cartProduct.priceCents
         )}</div>
-        <div class="product-quantity">
+        <div class="product-quantity js-product-quantity-${cartItem.id}">
           <span> Quantity: <span class="quantity-label js-quantity-label-${
             cartItem.id
           } ">${cartItem.quantity}</span> </span>
@@ -47,9 +50,9 @@ export function renderOrderSummary() {
           <input class="js-quantity-input js-quantity-input-${
             cartItem.id
           }" data-product-id = "${cartItem.id}">
-          <span class="js-save-quantity-link link-primary" data-product-id = "${
+          <span class="js-save-quantity-link js-save-quantity-link-${
             cartItem.id
-          }">Save</span>
+          } link-primary" data-product-id = "${cartItem.id}">Save</span>
           <span class="delete-quantity-link link-primary js-delete-btn" data-product-id = "${
             cartItem.id
           }">
