@@ -9,12 +9,13 @@ import { formatCurrency } from "../utils/money.js";
 import { findProduct } from "../../data/products.js";
 import { delivaryOptions } from "../../data/delivaryOptions.js";
 import dayjs from "https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js";
+import { renderPaymentSummary } from "./paymentSummary.js";
 
 document.querySelector(
   ".js-return-to-home-quantity"
 ).innerHTML = `${cartQuantity} items`;
 
-export function renderOrderSummaryHTML() {
+export function renderOrderSummary() {
   let orderSummaryHtml = ``;
   cart.forEach((cartItem) => {
     const cartProduct = findProduct(cartItem.id);
@@ -121,8 +122,8 @@ export function renderOrderSummaryHTML() {
       document.querySelector(
         ".js-return-to-home-quantity"
       ).innerHTML = `${cartQuantity} items`;
-      //renderOrderSummaryHTML();
       document.querySelector(`.js-cart-item-container-${productId}`).remove();
+      renderPaymentSummary();
     });
   });
   document.querySelectorAll(".js-update-btn").forEach((btn) => {
@@ -131,7 +132,6 @@ export function renderOrderSummaryHTML() {
       document
         .querySelector(`.js-cart-item-container-${productId}`)
         .classList.add("is-edditing-quantity");
-      //renderOrderSummaryHTML();
     });
   });
   document.querySelectorAll(".js-save-quantity-link").forEach((btn) => {
@@ -150,13 +150,14 @@ export function renderOrderSummaryHTML() {
         document
           .querySelector(`.js-cart-item-container-${productId}`)
           .classList.remove("is-edditing-quantity");
+        renderPaymentSummary();
       } else if (updateQuan === 0) {
         removeFromCart(productId);
         document.querySelector(
           ".js-return-to-home-quantity"
         ).innerHTML = `${cartQuantity} items`;
-        //renderOrderSummaryHTML();
         document.querySelector(`.js-cart-item-container-${productId}`).remove();
+        renderPaymentSummary();
       } else {
         document.querySelector(`.js-quantity-label-${productId}`).innerHTML =
           "Not a Valid Quantity";
@@ -183,15 +184,16 @@ export function renderOrderSummaryHTML() {
           document
             .querySelector(`.js-cart-item-container-${productId}`)
             .classList.remove("is-edditing-quantity");
+          renderPaymentSummary();
         } else if (updateQuan === 0) {
           removeFromCart(productId);
           document.querySelector(
             ".js-return-to-home-quantity"
           ).innerHTML = `${cartQuantity} items`;
-          //renderOrderSummaryHTML();
           document
             .querySelector(`.js-cart-item-container-${productId}`)
             .remove();
+          renderPaymentSummary();
         } else {
           document.querySelector(`.js-quantity-label-${productId}`).innerHTML =
             "Not a Valid Quantity";
@@ -206,47 +208,8 @@ export function renderOrderSummaryHTML() {
     element.addEventListener("click", () => {
       const { cartItemId, delivaryOptionId } = element.dataset;
       updateDelivaryOption(cartItemId, delivaryOptionId);
-      renderOrderSummaryHTML();
+      renderOrderSummary();
+      renderPaymentSummary();
     });
   });
 }
-
-/*const cartItemsCost = Number(calcCartItemsCost());
-const shippingCost = Number(4.99);
-const totalBeforeTax = cartItemsCost + shippingCost;
-const estimatedTax = (totalBeforeTax / 10).toFixed(2);
-const orderTotal = totalBeforeTax + estimatedTax;
-
-document.querySelector(".js-payment-summary").innerHTML = `
-  <div class="payment-summary-title">Order Summary</div>
-
-  <div class="payment-summary-row">
-    <div>Items (${cartQuantity}):</div>
-    <div class="payment-summary-money">$${cartItemsCost}</div>
-  </div>
-
-  <div class="payment-summary-row">
-    <div>Shipping &amp; handling:</div>
-    <div class="payment-summary-money">$4.99</div>
-  </div>
-
-  <div class="payment-summary-row subtotal-row">
-    <div>Total before tax:</div>
-    <div class="payment-summary-money">$${totalBeforeTax}</div>
-  </div>
-
-  <div class="payment-summary-row">
-    <div>Estimated tax (10%):</div>
-    <div class="payment-summary-money">$${estimatedTax}</div>
-  </div>
-
-  <div class="payment-summary-row total-row">
-    <div>Order total:</div>
-    <div class="payment-summary-money">$${orderTotal}</div>
-  </div>
-
-  <button class="place-order-button button-primary">
-    Place your order
-  </button>
-`;
-*/
