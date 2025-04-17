@@ -3,6 +3,7 @@ import {
   cartQuantity,
   removeFromCart,
   updateQuantity,
+  updateDelivaryOption,
 } from "../data/cart.js";
 import { formatCurrency } from "./utils/money.js";
 import { findProduct } from "../data/products.js";
@@ -19,7 +20,6 @@ function createOrderSummaryHTML() {
   let orderSummaryHtml = ``;
   cart.forEach((cartItem) => {
     const cartProduct = findProduct(cartItem.id);
-    //console.log(cartProduct);
     orderSummaryHtml += `
   <div class="cart-item-container js-cart-item-container-${cartItem.id}">
     <div class="delivery-date">Delivery date:${createDelivaryDate(
@@ -97,7 +97,9 @@ function createDelivaryOptionsHTML(cartItem) {
     let isChecked = "";
     if (delivaryOption.id === cartItem.delivaryOptionId) isChecked = "checked";
     delivaryOptionsHtml += `
-    <div class="delivery-option">
+    <div class="delivery-option js-delivary-option" 
+    data-cart-item-id = "${cartItem.id}" 
+    data-delivary-option-id = "${delivaryOption.id}">
       <input
         type="radio"
         ${isChecked}
@@ -113,6 +115,13 @@ function createDelivaryOptionsHTML(cartItem) {
   });
   return delivaryOptionsHtml;
 }
+
+document.querySelectorAll(".js-delivary-option").forEach((element) => {
+  element.addEventListener("click", () => {
+    const { cartItemId, delivaryOptionId } = element.dataset;
+    updateDelivaryOption(cartItemId, delivaryOptionId);
+  });
+});
 
 document.querySelectorAll(".js-delete-btn").forEach((btn) => {
   btn.addEventListener("click", () => {

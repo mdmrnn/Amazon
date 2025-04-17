@@ -17,6 +17,12 @@ let previousBtnId = "";
 export let cartQuantity = 0;
 updateCartQuantity();
 
+export function updateDelivaryOption(productId, delivaryOptionId) {
+  const cartItem = findCartItem(productId);
+  cartItem.delivaryOptionId = delivaryOptionId;
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
+
 export function addToCart(id) {
   const cartItem = findCartItem(id);
   //console.log(cartItem);
