@@ -92,13 +92,13 @@ export function renderOrderSummary() {
       if (delivaryOption.id === cartItem.delivaryOptionId)
         isChecked = "checked";
       delivaryOptionsHtml += `
-      <div class="delivery-option js-delivary-option" 
+      <div class="delivery-option js-delivary-option js-delivary-option-${cartItem.id}-${delivaryOption.id}" 
       data-cart-item-id = "${cartItem.id}" 
       data-delivary-option-id = "${delivaryOption.id}">
         <input
           type="radio"
           ${isChecked}
-          class="delivery-option-input"
+          class="delivery-option-input js-delivery-option-input-${cartItem}-${delivaryOption.id}"
           name="delivery-option-${cartItem.id}"
         />
         <div>

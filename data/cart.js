@@ -1,3 +1,4 @@
+import { delivaryOptions } from "./delivaryOptions.js";
 export let cart;
 export function loadFromStorage() {
   cart = JSON.parse(localStorage.getItem("cart")) || [
@@ -24,6 +25,15 @@ updateCartQuantity();
 
 export function updateDelivaryOption(productId, delivaryOptionId) {
   const cartItem = findCartItem(productId);
+  if (!cartItem) return;
+
+  let matchingDelivaryOption = "";
+  delivaryOptions.forEach((delivaryOption) => {
+    if (delivaryOption.id === delivaryOptionId)
+      matchingDelivaryOption = delivaryOption;
+  });
+  if (matchingDelivaryOption === "") return;
+
   cartItem.delivaryOptionId = delivaryOptionId;
   localStorage.setItem("cart", JSON.stringify(cart));
 }
@@ -87,7 +97,7 @@ export function updateCartQuantity() {
     cartQuantity += Number(cartItem.quantity);
   });
   //document.querySelector(".js-cart-quantity").innerHTML = cartQuantity;
-  localStorage.setItem("cartQuantity", JSON.stringify(cartQuantity));
+  //localStorage.setItem("cartQuantity", JSON.stringify(cartQuantity));
 }
 export function updateQuantity(productId, updateQuantity) {
   const cartItem = findCartItem(productId);
