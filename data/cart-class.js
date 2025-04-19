@@ -2,19 +2,19 @@ import { delivaryOptions } from "./delivaryOptions.js";
 
 class Cart {
   cartItem;
-  localStorageKey;
-  showAddedTimeoutId = 0;
-  previousBtnId = "";
+  #localStorageKey;
+  #showAddedTimeoutId = 0;
+  #previousBtnId = "";
   cartQuantity = 0;
 
   constructor(localStorageKey) {
-    this.localStorageKey = localStorageKey;
-    this.loadFromStorage();
+    this.#localStorageKey = localStorageKey;
+    this.#loadFromStorage();
     this.updateCartQuantity();
   }
 
-  loadFromStorage() {
-    this.cartItem = JSON.parse(localStorage.getItem(this.localStorageKey)) || [
+  #loadFromStorage() {
+    this.cartItem = JSON.parse(localStorage.getItem(this.#localStorageKey)) || [
       {
         id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
         quantity: 2,
@@ -29,7 +29,7 @@ class Cart {
   }
 
   saveToStorage() {
-    localStorage.setItem(this.localStorageKey, JSON.stringify(this.cartItem));
+    localStorage.setItem(this.#localStorageKey, JSON.stringify(this.cartItem));
   }
 
   findCartItem(id) {
@@ -49,11 +49,11 @@ class Cart {
     if (!addedToCart) return;
     else {
       addedToCart.classList.add("js-show-added");
-      if (this.previousBtnId === productId) {
-        clearTimeout(this.showAddedTimeoutId);
+      if (this.#previousBtnId === productId) {
+        clearTimeout(this.#showAddedTimeoutId);
       }
-      this.previousBtnId = productId;
-      this.showAddedTimeoutId = setTimeout(() => {
+      this.#previousBtnId = productId;
+      this.#showAddedTimeoutId = setTimeout(() => {
         addedToCart.classList.remove("js-show-added");
       }, 1000);
     }
