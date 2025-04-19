@@ -1,9 +1,25 @@
-export function findProduct(productId) {
-  let matchingItem = "";
-  products.forEach((product) => {
-    if (product.id === productId) matchingItem = product;
-  });
-  return matchingItem;
+import { formatCurrency } from "../scripts/utils/money.js";
+class Products {
+  id;
+  image;
+  name;
+  rating;
+  priceCents;
+  keywords;
+  constructor(productDetail) {
+    this.id = productDetail.id;
+    this.image = productDetail.image;
+    this.name = productDetail.name;
+    this.rating = productDetail.rating;
+    this.priceCents = productDetail.priceCents;
+    this.keywords = productDetail.keywords;
+  }
+  getRatingUrl() {
+    return `images/ratings/rating-${this.rating.stars * 10}.png`;
+  }
+  getPrice() {
+    return `$${formatCurrency(this.priceCents)}`;
+  }
 }
 
 export const products = [
@@ -13,10 +29,10 @@ export const products = [
     name: "backpack",
     rating: {
       stars: 4.5,
-      count: 187,
+      count: 387,
     },
-    priceCents: 10900,
-    keywords: ["backpack", "School", "teenager"],
+    priceCents: 1000,
+    keywords: ["backpack", "balck", "sexy"],
   },
   {
     id: "id2",
@@ -499,4 +515,14 @@ export const products = [
     priceCents: 2400,
     keywords: ["sweaters", "hoodies", "apparel", "mens"],
   },
-];
+].map((productDetail) => {
+  return new Products(productDetail);
+});
+
+export function findProduct(productId) {
+  let matchingItem = "";
+  products.forEach((product) => {
+    if (product.id === productId) matchingItem = product;
+  });
+  return matchingItem;
+}
