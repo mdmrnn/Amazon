@@ -1,5 +1,6 @@
 import { formatCurrency } from "../scripts/utils/money.js";
-class Products {
+
+export class Products {
   id;
   image;
   name;
@@ -25,7 +26,7 @@ class Products {
   }
 }
 
-class Clothing extends Products {
+export class Clothing extends Products {
   sizeChartLink;
   constructor(productDetail) {
     super(productDetail);
@@ -34,6 +35,22 @@ class Clothing extends Products {
 
   extraInfoHTML() {
     return `<a href=${this.sizeChartLink} target="_blank">Size Chart</a>`;
+  }
+}
+
+export class Appliance extends Products {
+  instructions;
+  warranty;
+  constructor(productDetail) {
+    super(productDetail);
+    this.instructions = productDetail.instructions;
+    this.warranty = productDetail.warranty;
+  }
+
+  extraInfoHTML() {
+    return `
+    <div><a href=${this.instructions} target="_blank">Instruction</a></div>
+    <div><a href=${this.warranty} target="_blank">Warranty</a></div>`;
   }
 }
 
@@ -105,6 +122,9 @@ export const products = [
     },
     priceCents: 1899,
     keywords: ["toaster", "kitchen", "appliances"],
+    type: "appliance",
+    instructions: "images/appliance-instructions.png",
+    warranty: "images/appliance-warranty.png",
   },
   {
     id: "3ebe75dc-64d2-4137-8860-1f5a963e534b",
@@ -239,6 +259,9 @@ export const products = [
     },
     priceCents: 3074,
     keywords: ["water boiler", "appliances", "kitchen"],
+    type: "appliance",
+    instructions: "images/appliance-instructions.png",
+    warranty: "images/appliance-warranty.png",
   },
   {
     id: "6b07d4e7-f540-454e-8a1e-363f25dbae7d",
@@ -397,6 +420,9 @@ export const products = [
     },
     priceCents: 6797,
     keywords: ["cooking set", "kitchen"],
+    type: "appliance",
+    instructions: "images/appliance-instructions.png",
+    warranty: "images/appliance-warranty.png",
   },
   {
     id: "a434b69f-1bc1-482d-9ce7-cd7f4a66ce8d",
@@ -452,6 +478,9 @@ export const products = [
     },
     priceCents: 2250,
     keywords: ["coffeemakers", "kitchen", "appliances"],
+    type: "appliance",
+    instructions: "images/appliance-instructions.png",
+    warranty: "images/appliance-warranty.png",
   },
   {
     id: "02e3a47e-dd68-467e-9f71-8bf6f723fdae",
@@ -496,6 +525,9 @@ export const products = [
     },
     priceCents: 10747,
     keywords: ["food blenders", "kitchen", "appliances"],
+    type: "appliance",
+    instructions: "images/appliance-instructions.png",
+    warranty: "images/appliance-warranty.png",
   },
   {
     id: "36c64692-677f-4f58-b5ec-0dc2cf109e27",
@@ -532,6 +564,7 @@ export const products = [
   },
 ].map((productDetail) => {
   if (productDetail.type === "clothing") return new Clothing(productDetail);
+  if (productDetail.type === "appliance") return new Appliance(productDetail);
   return new Products(productDetail);
 });
 
@@ -543,4 +576,4 @@ export function findProduct(productId) {
   return matchingItem;
 }
 
-console.log(products);
+//console.log(products);
