@@ -12,6 +12,7 @@ describe("testRenderOrderSummary", () => {
     <div class="js-return-to-home-quantity"></div>
     `;
     spyOn(localStorage, "setItem");
+    /*
     spyOn(localStorage, "getItem").and.callFake(() => {
       return JSON.stringify([
         {
@@ -27,6 +28,19 @@ describe("testRenderOrderSummary", () => {
       ]);
     });
     cart.loadFromStorage();
+    */
+    cart.cartItem = [
+      {
+        id: product1Id,
+        quantity: 2,
+        delivaryOptionId: "1",
+      },
+      {
+        id: product2Id,
+        quantity: 1,
+        delivaryOptionId: "2",
+      },
+    ];
     renderOrderSummary();
   });
   afterEach(() => {
@@ -73,21 +87,18 @@ describe("test delivary option update", () => {
     <div class="js-return-to-home-quantity"></div>
     `;
     spyOn(localStorage, "setItem");
-    spyOn(localStorage, "getItem").and.callFake(() => {
-      return JSON.stringify([
-        {
-          id: product1Id,
-          quantity: 2,
-          delivaryOptionId: "1",
-        },
-        {
-          id: product2Id,
-          quantity: 1,
-          delivaryOptionId: "2",
-        },
-      ]);
-    });
-    cart.loadFromStorage();
+    cart.cartItem = [
+      {
+        id: product1Id,
+        quantity: 2,
+        delivaryOptionId: "1",
+      },
+      {
+        id: product2Id,
+        quantity: 1,
+        delivaryOptionId: "2",
+      },
+    ];
     renderOrderSummary();
     renderPaymentSummary();
   });
