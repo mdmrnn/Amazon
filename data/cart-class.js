@@ -9,11 +9,11 @@ class Cart {
 
   constructor(localStorageKey) {
     this.#localStorageKey = localStorageKey;
-    this.#loadFromStorage();
+    this.loadFromStorage();
     this.updateCartQuantity();
   }
 
-  #loadFromStorage() {
+  loadFromStorage() {
     this.cartItem = JSON.parse(localStorage.getItem(this.#localStorageKey)) || [
       {
         id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
@@ -68,7 +68,7 @@ class Cart {
 
   addToCart(id) {
     const matchingItem = this.findCartItem(id);
-    const quantitySelector = 1;
+    let quantitySelector = 1;
     if (document.querySelector(`.js-quantity-selector-${id}`))
       quantitySelector = Number(
         document.querySelector(`.js-quantity-selector-${id}`).value
@@ -118,10 +118,8 @@ class Cart {
   }
 }
 
-const cart = new Cart("cart-oop");
+export const cart = new Cart("cart-oop");
 const bussinessCart = new Cart("business-cart");
-
-cart.addToCart("3ebe75dc-64d2-4137-8860-1f5a963e534b");
 
 console.log(cart);
 console.log(bussinessCart);

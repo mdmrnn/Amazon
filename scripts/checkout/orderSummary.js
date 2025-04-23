@@ -1,10 +1,4 @@
-import {
-  cart,
-  cartQuantity,
-  removeFromCart,
-  updateQuantity,
-  updateDelivaryOption,
-} from "../../data/cart.js";
+import { cart } from "../../data/cart-class.js";
 import { formatCurrency } from "../utils/money.js";
 import { findProduct } from "../../data/products.js";
 import {
@@ -17,7 +11,7 @@ import renderCheckoutHeader from "./header.js";
 export function renderOrderSummary() {
   let orderSummaryHtml = ``;
 
-  cart.forEach((cartItem) => {
+  cart.cartItem.forEach((cartItem) => {
     const cartProduct = findProduct(cartItem.id);
     orderSummaryHtml += `
   <div class="cart-item-container js-cart-item-container js-cart-item-container-${
@@ -114,8 +108,8 @@ export function renderOrderSummary() {
   document.querySelectorAll(".js-delete-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       const { productId } = btn.dataset;
-      removeFromCart(productId);
-      renderCheckoutHeader(cartQuantity);
+      cart.removeFromCart(productId);
+      renderCheckoutHeader(cart.cartQuantity);
       renderOrderSummary();
       renderPaymentSummary();
     });
@@ -135,18 +129,18 @@ export function renderOrderSummary() {
         document.querySelector(`.js-quantity-input-${productId}`).value
       );
       if (updateQuan > 0 && updateQuan <= 1000) {
-        updateQuantity(productId, updateQuan);
+        cart.updateQuantity(productId, updateQuan);
         renderOrderSummary();
         renderPaymentSummary();
-        renderCheckoutHeader(cartQuantity);
+        renderCheckoutHeader(cart.cartQuantity);
         document
           .querySelector(`.js-cart-item-container-${productId}`)
           .classList.remove("is-edditing-quantity");
       } else if (updateQuan === 0) {
-        removeFromCart(productId);
+        cart.removeFromCart(productId);
         renderOrderSummary();
         renderPaymentSummary();
-        renderCheckoutHeader(cartQuantity);
+        renderCheckoutHeader(cart.cartQuantity);
       } else {
         document.querySelector(`.js-quantity-label-${productId}`).innerHTML =
           "Not a Valid Quantity";
@@ -164,18 +158,18 @@ export function renderOrderSummary() {
           document.querySelector(`.js-quantity-input-${productId}`).value
         );
         if (updateQuan > 0 && updateQuan <= 1000) {
-          updateQuantity(productId, updateQuan);
+          cart.updateQuantity(productId, updateQuan);
           renderOrderSummary();
           renderPaymentSummary();
-          renderCheckoutHeader(cartQuantity);
+          renderCheckoutHeader(cart.cartQuantity);
           document
             .querySelector(`.js-cart-item-container-${productId}`)
             .classList.remove("is-edditing-quantity");
         } else if (updateQuan === 0) {
-          removeFromCart(productId);
+          cart.removeFromCart(productId);
           renderOrderSummary();
           renderPaymentSummary();
-          renderCheckoutHeader(cartQuantity);
+          renderCheckoutHeader(cart.cartQuantity);
         } else {
           document.querySelector(`.js-quantity-label-${productId}`).innerHTML =
             "Not a Valid Quantity";
@@ -189,7 +183,7 @@ export function renderOrderSummary() {
   document.querySelectorAll(".js-delivary-option").forEach((element) => {
     element.addEventListener("click", () => {
       const { cartItemId, delivaryOptionId } = element.dataset;
-      updateDelivaryOption(cartItemId, delivaryOptionId);
+      cart.updateDelivaryOption(cartItemId, delivaryOptionId);
       renderOrderSummary();
       renderPaymentSummary();
     });

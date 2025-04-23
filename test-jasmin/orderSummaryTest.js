@@ -1,5 +1,5 @@
 import { renderOrderSummary } from "../scripts/checkout/orderSummary.js";
-import { loadFromStorage, cart } from "../data/cart.js";
+import { cart } from "../data/cart-class.js";
 import { renderPaymentSummary } from "../scripts/checkout/paymentSummary.js";
 
 describe("testRenderOrderSummary", () => {
@@ -26,7 +26,7 @@ describe("testRenderOrderSummary", () => {
         },
       ]);
     });
-    loadFromStorage();
+    cart.loadFromStorage();
     renderOrderSummary();
   });
   afterEach(() => {
@@ -58,8 +58,8 @@ describe("testRenderOrderSummary", () => {
     expect(
       document.querySelector(`.js-cart-item-container-${product2Id}`)
     ).not.toEqual(null);
-    expect(cart.length).toEqual(1);
-    expect(cart[0].id).toEqual(product2Id);
+    expect(cart.cartItem.length).toEqual(1);
+    expect(cart.cartItem[0].id).toEqual(product2Id);
   });
 });
 
@@ -87,7 +87,7 @@ describe("test delivary option update", () => {
         },
       ]);
     });
-    loadFromStorage();
+    cart.loadFromStorage();
     renderOrderSummary();
     renderPaymentSummary();
   });
@@ -97,8 +97,8 @@ describe("test delivary option update", () => {
   it("update delivary click", () => {
     document.querySelector(`.js-delivary-option-${product1Id}-3`).click();
 
-    expect(cart[0].delivaryOptionId).toEqual("3");
-    expect(cart.length).toEqual(2);
+    expect(cart.cartItem[0].delivaryOptionId).toEqual("3");
+    expect(cart.cartItem.length).toEqual(2);
     expect(document.querySelector(".js-shipping-cost").innerHTML).toEqual(
       "$14.98"
     );

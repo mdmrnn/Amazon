@@ -1,7 +1,5 @@
-import * as cartModule from "../data/cart.js";
+import { cart } from "../data/cart-class.js";
 import { products, findProduct } from "../data/products.js";
-import { formatCurrency } from "./utils/money.js";
-
 let ProductsHTML = ``;
 products.forEach((product) => {
   ProductsHTML += `
@@ -61,23 +59,21 @@ products.forEach((product) => {
 //cartModule.updateCartQuantity();
 document.querySelector(".js-products-grid").innerHTML = ProductsHTML;
 
-document.querySelector(
-  ".js-cart-quantity"
-).innerHTML = `${cartModule.cartQuantity}`;
+document.querySelector(".js-cart-quantity").innerHTML = `${cart.cartQuantity}`;
 
 document.querySelectorAll(".js-add-to-cart-btn").forEach((button) => {
   button.addEventListener("click", () => {
     const { productId } = button.dataset;
-    cartModule.addToCart(productId);
+    cart.addToCart(productId);
     document.querySelector(
       ".js-cart-quantity"
-    ).innerHTML = `${cartModule.cartQuantity}`;
+    ).innerHTML = `${cart.cartQuantity}`;
   });
 });
 
 export function calcCartItemsCost() {
   let cartItemsCost = 0;
-  cart.forEach((cartItem) => {
+  cart.cartItem.forEach((cartItem) => {
     const cartProduct = findProduct(cartItem.productId);
     cartItemsCost += Number(cartProduct.priceCents / 100).toFixed(2);
   });
