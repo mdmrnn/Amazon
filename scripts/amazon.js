@@ -1,8 +1,12 @@
 import { cart } from "../data/cart-class.js";
-import { products, findProduct } from "../data/products.js";
-let ProductsHTML = ``;
-products.forEach((product) => {
-  ProductsHTML += `
+import { products, loadProducts } from "../data/products.js";
+
+loadProducts(renderProductsGrid);
+
+function renderProductsGrid() {
+  let ProductsHTML = ``;
+  products.forEach((product) => {
+    ProductsHTML += `
   <div class="product-container">
     <div class="product-image-container">
       <img
@@ -54,22 +58,25 @@ products.forEach((product) => {
     }">Add to Cart</button>
   </div>
   `;
-});
-
-//cartModule.updateCartQuantity();
-document.querySelector(".js-products-grid").innerHTML = ProductsHTML;
-
-document.querySelector(".js-cart-quantity").innerHTML = `${cart.cartQuantity}`;
-
-document.querySelectorAll(".js-add-to-cart-btn").forEach((button) => {
-  button.addEventListener("click", () => {
-    const { productId } = button.dataset;
-    cart.addToCart(productId);
-    document.querySelector(
-      ".js-cart-quantity"
-    ).innerHTML = `${cart.cartQuantity}`;
   });
-});
+
+  //cartModule.updateCartQuantity();
+  document.querySelector(".js-products-grid").innerHTML = ProductsHTML;
+
+  document.querySelector(
+    ".js-cart-quantity"
+  ).innerHTML = `${cart.cartQuantity}`;
+
+  document.querySelectorAll(".js-add-to-cart-btn").forEach((button) => {
+    button.addEventListener("click", () => {
+      const { productId } = button.dataset;
+      cart.addToCart(productId);
+      document.querySelector(
+        ".js-cart-quantity"
+      ).innerHTML = `${cart.cartQuantity}`;
+    });
+  });
+}
 
 export function calcCartItemsCost() {
   let cartItemsCost = 0;
@@ -78,4 +85,12 @@ export function calcCartItemsCost() {
     cartItemsCost += Number(cartProduct.priceCents / 100).toFixed(2);
   });
   return cartItemsCost;
+}
+
+function findProduct(productId) {
+  let matchingItem = "";
+  products.forEach((product) => {
+    if (product.id === productId) matchingItem = product;
+  });
+  return matchingItem;
 }

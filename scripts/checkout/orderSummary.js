@@ -1,6 +1,6 @@
 import { cart } from "../../data/cart-class.js";
 import { formatCurrency } from "../utils/money.js";
-import { findProduct } from "../../data/products.js";
+import { products } from "../../data/products.js";
 import {
   delivaryOptions,
   createDelivaryDate,
@@ -10,57 +10,56 @@ import renderCheckoutHeader from "./header.js";
 
 export function renderOrderSummary() {
   let orderSummaryHtml = ``;
-
   cart.cartItem.forEach((cartItem) => {
     const cartProduct = findProduct(cartItem.id);
     orderSummaryHtml += `
-  <div class="cart-item-container js-cart-item-container js-cart-item-container-${
-    cartItem.id
-  }">
-    <div class="delivery-date">Delivery date:${createDelivaryDateCartItem(
-      cartItem
-    )}</div>  
-    <div class="cart-item-details-grid">
-      <img
-        class="product-image"
-        src="${cartProduct.image}"
-      /> 
-      <div class="cart-item-details">
-        <div class="product-name">
-          ${cartProduct.name}
-        </div>
-        <div class="product-price">${cartProduct.getPrice()}</div>
-        <div class="product-quantity js-product-quantity-${cartItem.id}">
-          <span> Quantity: <span class="quantity-label js-quantity-label-${
-            cartItem.id
-          } ">${cartItem.quantity}</span> </span>
-          <span class="update-quantity-link link-primary js-update-btn" data-product-id = "${
-            cartItem.id
-          }">
-            Update
-          </span>
-          <input class="js-quantity-input js-quantity-input-${
-            cartItem.id
-          }" data-product-id = "${cartItem.id}">
-          <span class="js-save-quantity-link js-save-quantity-link-${
-            cartItem.id
-          } link-primary" data-product-id = "${cartItem.id}">Save</span>
-          <span class="delete-quantity-link link-primary js-delete-btn" data-product-id = "${
-            cartItem.id
-          }">
-            Delete
-          </span>
+      <div class="cart-item-container js-cart-item-container js-cart-item-container-${
+        cartItem.id
+      }">
+        <div class="delivery-date">Delivery date:${createDelivaryDateCartItem(
+          cartItem
+        )}</div>  
+        <div class="cart-item-details-grid">
+          <img
+            class="product-image"
+            src="${cartProduct.image}"
+          /> 
+          <div class="cart-item-details">
+            <div class="product-name">
+              ${cartProduct.name}
+            </div>
+            <div class="product-price">${cartProduct.getPrice()}</div>
+            <div class="product-quantity js-product-quantity-${cartItem.id}">
+              <span> Quantity: <span class="quantity-label js-quantity-label-${
+                cartItem.id
+              } ">${cartItem.quantity}</span> </span>
+              <span class="update-quantity-link link-primary js-update-btn" data-product-id = "${
+                cartItem.id
+              }">
+                Update
+              </span>
+              <input class="js-quantity-input js-quantity-input-${
+                cartItem.id
+              }" data-product-id = "${cartItem.id}">
+              <span class="js-save-quantity-link js-save-quantity-link-${
+                cartItem.id
+              } link-primary" data-product-id = "${cartItem.id}">Save</span>
+              <span class="delete-quantity-link link-primary js-delete-btn" data-product-id = "${
+                cartItem.id
+              }">
+                Delete
+              </span>
+            </div>
+          </div>
+          <div class="delivery-options">
+            <div class="delivery-options-title">
+              Choose a delivery option:
+            </div>
+              ${createDelivaryOptionsHTML(cartItem)}
+          </div>
+          </div>
         </div>
       </div>
-      <div class="delivery-options">
-        <div class="delivery-options-title">
-          Choose a delivery option:
-        </div>
-          ${createDelivaryOptionsHTML(cartItem)}
-      </div>
-      </div>
-    </div>
-  </div>
   `;
   });
 
@@ -188,4 +187,12 @@ export function renderOrderSummary() {
       renderPaymentSummary();
     });
   });
+}
+
+function findProduct(productId) {
+  let matchingItem = "";
+  products.forEach((product) => {
+    if (product.id === productId) matchingItem = product;
+  });
+  return matchingItem;
 }

@@ -120,6 +120,3 @@ class Cart {
 
 export const cart = new Cart("cart-oop");
 const bussinessCart = new Cart("business-cart");
-
-console.log(cart);
-console.log(bussinessCart);

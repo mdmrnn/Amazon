@@ -1,5 +1,5 @@
 import { cart } from "../../data/cart-class.js";
-import { findProduct } from "../../data/products.js";
+import { products } from "../../data/products.js";
 import { formatCurrency } from "../utils/money.js";
 import { findDelivaryOption } from "../../data/delivaryOptions.js";
 
@@ -58,6 +58,14 @@ function calcShippingCost() {
     shippingCostCents += cartDelivaryOption.priceCents;
   });
   return shippingCostCents;
+}
+
+function findProduct(productId) {
+  let matchingItem = "";
+  products.forEach((product) => {
+    if (product.id === productId) matchingItem = product;
+  });
+  return matchingItem;
 }
 /*
 const cartItemsCost = Number(calcCartItemsCost());

@@ -32,7 +32,6 @@ export class Clothing extends Products {
     super(productDetail);
     this.sizeChartLink = productDetail.sizeChartLink;
   }
-
   extraInfoHTML() {
     return `<a href=${this.sizeChartLink} target="_blank">Size Chart</a>`;
   }
@@ -54,6 +53,27 @@ export class Appliance extends Products {
   }
 }
 
+export let products = [];
+export function loadProducts(func) {
+  const xhr = new XMLHttpRequest();
+  xhr.addEventListener("load", () => {
+    let clothing = 0;
+    products = JSON.parse(xhr.response).map((productDetail) => {
+      if (productDetail.type === "clothing") {
+        return new Clothing(productDetail);
+      }
+
+      if (productDetail.type === "appliance")
+        return new Appliance(productDetail);
+      return new Products(productDetail);
+    });
+    console.log("Products loaded");
+    func();
+  });
+  xhr.open("GET", "https://supersimplebackend.dev/products");
+  xhr.send();
+}
+/*
 export const products = [
   {
     id: "id1",
@@ -567,13 +587,6 @@ export const products = [
   if (productDetail.type === "appliance") return new Appliance(productDetail);
   return new Products(productDetail);
 });
-
-export function findProduct(productId) {
-  let matchingItem = "";
-  products.forEach((product) => {
-    if (product.id === productId) matchingItem = product;
-  });
-  return matchingItem;
-}
+*/
 
 //console.log(products);
