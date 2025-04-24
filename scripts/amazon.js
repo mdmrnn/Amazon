@@ -2,11 +2,14 @@ import { cart } from "../data/cart-class.js";
 import { products, loadProductsFetch } from "../data/products.js";
 
 //loadProducts(renderProductsGrid);
+/*
 loadProductsFetch().then(() => {
   renderProductsGrid();
 });
-
-function renderProductsGrid() {
+*/
+renderProductsGrid();
+async function renderProductsGrid() {
+  await loadProductsFetch();
   let ProductsHTML = ``;
   products.forEach((product) => {
     ProductsHTML += `

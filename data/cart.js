@@ -15,6 +15,14 @@ export function loadFromStorage() {
   ];
 }
 loadFromStorage();
+
+export function loadCartFetch() {
+  const promise = fetch("https://supersimplebackend.dev/cart").then(() => {
+    console.log("cart loaded");
+  });
+  return promise;
+}
+
 function saveToStorage() {
   localStorage.setItem("cart", JSON.stringify(cart));
 }
