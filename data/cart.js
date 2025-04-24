@@ -16,10 +16,14 @@ export function loadFromStorage() {
 }
 loadFromStorage();
 
-export function loadCartFetch() {
-  const promise = fetch("https://supersimplebackend.dev/cart").then(() => {
+export async function loadCartFetch() {
+  let promise;
+  try {
+    promise = await fetch("https://supersimplebackend.dev/cart");
     console.log("cart loaded");
-  });
+  } catch {
+    console.log("UnExpected Error has occured. Please try again later");
+  }
   return promise;
 }
 

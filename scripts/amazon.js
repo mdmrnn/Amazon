@@ -9,7 +9,11 @@ loadProductsFetch().then(() => {
 */
 renderProductsGrid();
 async function renderProductsGrid() {
-  await loadProductsFetch();
+  try {
+    await loadProductsFetch();
+  } catch {
+    console.log("UnExpected Error has occured. Please try again later");
+  }
   let ProductsHTML = ``;
   products.forEach((product) => {
     ProductsHTML += `

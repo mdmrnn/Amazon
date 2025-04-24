@@ -9,7 +9,11 @@ import { loadProductsFetch } from "../data/products.js";
 
 renderCheckoutPage();
 async function renderCheckoutPage() {
-  await Promise.all([loadProductsFetch(), loadCartFetch()]);
+  try {
+    await Promise.all([loadProductsFetch(), loadCartFetch()]);
+  } catch {
+    console.log("UnExpected Error has occured. Please try again later");
+  }
   renderOrderSummary();
   renderPaymentSummary();
   renderCheckoutHeader(cart.cartQuantity);
