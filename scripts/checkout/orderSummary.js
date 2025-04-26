@@ -11,10 +11,10 @@ import renderCheckoutHeader from "./header.js";
 export function renderOrderSummary() {
   let orderSummaryHtml = ``;
   cart.cartItem.forEach((cartItem) => {
-    const cartProduct = findProduct(cartItem.id);
+    const cartProduct = findProduct(cartItem.productId);
     orderSummaryHtml += `
       <div class="cart-item-container js-cart-item-container js-cart-item-container-${
-        cartItem.id
+        cartItem.productId
       }">
         <div class="delivery-date">Delivery date:${createDelivaryDateCartItem(
           cartItem
@@ -29,23 +29,27 @@ export function renderOrderSummary() {
               ${cartProduct.name}
             </div>
             <div class="product-price">${cartProduct.getPrice()}</div>
-            <div class="product-quantity js-product-quantity-${cartItem.id}">
+            <div class="product-quantity js-product-quantity-${
+              cartItem.productId
+            }">
               <span> Quantity: <span class="quantity-label js-quantity-label-${
-                cartItem.id
+                cartItem.productId
               } ">${cartItem.quantity}</span> </span>
               <span class="update-quantity-link link-primary js-update-btn" data-product-id = "${
-                cartItem.id
+                cartItem.productId
               }">
                 Update
               </span>
               <input class="js-quantity-input js-quantity-input-${
-                cartItem.id
-              }" data-product-id = "${cartItem.id}">
+                cartItem.productId
+              }" data-product-id = "${cartItem.productId}">
               <span class="js-save-quantity-link js-save-quantity-link-${
-                cartItem.id
-              } link-primary" data-product-id = "${cartItem.id}">Save</span>
+                cartItem.productId
+              } link-primary" data-product-id = "${
+      cartItem.productId
+    }">Save</span>
               <span class="delete-quantity-link link-primary js-delete-btn" data-product-id = "${
-                cartItem.id
+                cartItem.productId
               }">
                 Delete
               </span>
@@ -62,6 +66,14 @@ export function renderOrderSummary() {
       </div>
   `;
   });
+
+  function findProduct(Id) {
+    let matchingItem = "";
+    products.forEach((product) => {
+      if (product.id === Id) matchingItem = product;
+    });
+    return matchingItem;
+  }
 
   function createDelivaryDateCartItem(cartItem) {
     let delivaryDays = "";
@@ -83,14 +95,14 @@ export function renderOrderSummary() {
       if (delivaryOption.id === cartItem.delivaryOptionId)
         isChecked = "checked";
       delivaryOptionsHtml += `
-      <div class="delivery-option js-delivary-option js-delivary-option-${cartItem.id}-${delivaryOption.id}" 
-      data-cart-item-id = "${cartItem.id}" 
+      <div class="delivery-option js-delivary-option js-delivary-option-${cartItem.productId}-${delivaryOption.id}" 
+      data-cart-item-id = "${cartItem.productId}" 
       data-delivary-option-id = "${delivaryOption.id}">
         <input
           type="radio"
           ${isChecked}
           class="delivery-option-input js-delivery-option-input-${cartItem}-${delivaryOption.id}"
-          name="delivery-option-${cartItem.id}"
+          name="delivery-option-${cartItem.productId}"
         />
         <div>
           <div class="delivery-option-date">${delivaryDate}</div>
@@ -187,12 +199,4 @@ export function renderOrderSummary() {
       renderPaymentSummary();
     });
   });
-}
-
-function findProduct(productId) {
-  let matchingItem = "";
-  products.forEach((product) => {
-    if (product.id === productId) matchingItem = product;
-  });
-  return matchingItem;
 }

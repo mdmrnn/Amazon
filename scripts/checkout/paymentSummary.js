@@ -2,6 +2,7 @@ import { cart } from "../../data/cart-class.js";
 import { products } from "../../data/products.js";
 import { formatCurrency } from "../utils/money.js";
 import { findDelivaryOption } from "../../data/delivaryOptions.js";
+import { addOrder } from "../../data/orders.js";
 
 export function renderPaymentSummary() {
   const itemsCents = calcItemsCost();
@@ -40,32 +41,54 @@ export function renderPaymentSummary() {
   </div>
   `;
   document.querySelector(".js-payment-summary").innerHTML = paymentSummaryHtml;
-}
 
-function calcItemsCost() {
-  let itemsCostCents = 0;
-  cart.cartItem.forEach((cartItem) => {
-    const cartProduct = findProduct(cartItem.id);
-    itemsCostCents += cartProduct.priceCents * cartItem.quantity;
-  });
-  return itemsCostCents;
-}
+  function calcItemsCost() {
+    let itemsCostCents = 0;
+    cart.cartItem.forEach((cartItem) => {
+      const cartProduct = findProduct(cartItem.productId);
+      itemsCostCents += cartProduct.priceCents * cartItem.quantity;
+    });
+    return itemsCostCents;
+  }
 
-function calcShippingCost() {
-  let shippingCostCents = 0;
-  cart.cartItem.forEach((cartItem) => {
-    const cartDelivaryOption = findDelivaryOption(cartItem.delivaryOptionId);
-    shippingCostCents += cartDelivaryOption.priceCents;
-  });
-  return shippingCostCents;
-}
+  function calcShippingCost() {
+    let shippingCostCents = 0;
+    cart.cartItem.forEach((cartItem) => {
+      const cartDelivaryOption = findDelivaryOption(cartItem.delivaryOptionId);
+      shippingCostCents += cartDelivaryOption.priceCents;
+    });
+    return shippingCostCents;
+  }
 
-function findProduct(productId) {
-  let matchingItem = "";
-  products.forEach((product) => {
-    if (product.id === productId) matchingItem = product;
-  });
-  return matchingItem;
+  function findProduct(productId) {
+    let matchingItem = "";
+    products.forEach((product) => {
+      if (product.id === productId) matchingItem = product;
+    });
+    return matchingItem;
+  }
+
+  document
+    .querySelector(".js-place-order-btn")
+    .addEventListener("click", async () => {
+      try {
+        const response = await fetch("https://supersimplebackend.dev/orders", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            cart: cart.cartItem,
+          }),
+        });
+        const order = await response.json();
+        addOrder(order);
+      } catch (error) {
+        console.log("UnExpected Error has occured. Please try again later");
+      }
+
+      window.location.href = "orders.html";
+    });
 }
 /*
 const cartItemsCost = Number(calcCartItemsCost());

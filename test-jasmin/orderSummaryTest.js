@@ -17,23 +17,29 @@ describe("testRenderOrderSummary", () => {
     <div class="js-payment-summary"></div>
     <div class="js-return-to-home-quantity"></div>
     `;
+    document.querySelector(".js-test-container-payment-summary").innerHTML = `
+    <button class="place-order-button button-primary js-place-order-btn">
+    </button>
+    `;
     spyOn(localStorage, "setItem");
     cart.cartItem = [
       {
-        id: product1Id,
+        productId: product1Id,
         quantity: 2,
         delivaryOptionId: "1",
       },
       {
-        id: product2Id,
+        productId: product2Id,
         quantity: 1,
         delivaryOptionId: "2",
       },
     ];
     renderOrderSummary();
+    renderPaymentSummary();
   });
   afterEach(() => {
     document.querySelector(".js-test-container-order-summary").innerHTML = "";
+    document.querySelector(".js-test-container-payment-summary").innerHTML = "";
   });
   it("display carts", () => {
     expect(document.querySelectorAll(".js-cart-item-container").length).toEqual(
@@ -62,7 +68,7 @@ describe("testRenderOrderSummary", () => {
       document.querySelector(`.js-cart-item-container-${product2Id}`)
     ).not.toEqual(null);
     expect(cart.cartItem.length).toEqual(1);
-    expect(cart.cartItem[0].id).toEqual(product2Id);
+    expect(cart.cartItem[0].productId).toEqual(product2Id);
   });
 });
 
@@ -80,15 +86,19 @@ describe("test delivary option update", () => {
     <div class="js-payment-summary"></div>
     <div class="js-return-to-home-quantity"></div>
     `;
+    document.querySelector(".js-test-container-payment-summary").innerHTML = `
+    <button class="place-order-button button-primary js-place-order-btn">
+    </button>
+    `;
     spyOn(localStorage, "setItem");
     cart.cartItem = [
       {
-        id: product1Id,
+        productId: product1Id,
         quantity: 2,
         delivaryOptionId: "1",
       },
       {
-        id: product2Id,
+        productId: product2Id,
         quantity: 1,
         delivaryOptionId: "2",
       },
@@ -98,6 +108,7 @@ describe("test delivary option update", () => {
   });
   afterEach(() => {
     document.querySelector(".js-test-container-order-summary").innerHTML = "";
+    //document.querySelector(".js-test-container-payment-summary").innerHTML = "";
   });
   it("update delivary click", () => {
     document.querySelector(`.js-delivary-option-${product1Id}-3`).click();
@@ -112,4 +123,3 @@ describe("test delivary option update", () => {
     );
   });
 });
-//});

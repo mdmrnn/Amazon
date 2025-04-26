@@ -79,7 +79,7 @@ async function renderProductsGrid() {
 
   document.querySelectorAll(".js-add-to-cart-btn").forEach((button) => {
     button.addEventListener("click", () => {
-      const { productId } = button.dataset;
+      const productId = button.dataset.productId;
       cart.addToCart(productId);
       document.querySelector(
         ".js-cart-quantity"
