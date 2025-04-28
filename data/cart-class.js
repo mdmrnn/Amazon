@@ -14,7 +14,10 @@ class Cart {
   }
 
   loadFromStorage() {
-    this.cartItem = JSON.parse(localStorage.getItem(this.#localStorageKey)) || [
+    this.cartItem =
+      JSON.parse(localStorage.getItem(this.#localStorageKey)) ||
+      [
+        /*
       {
         productId: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
         quantity: 2,
@@ -25,7 +28,8 @@ class Cart {
         quantity: 1,
         delivaryOptionId: "2",
       },
-    ];
+      */
+      ];
   }
 
   saveToStorage() {
@@ -118,5 +122,5 @@ class Cart {
   }
 }
 
-export const cart = new Cart("cart-oop");
+export const cartClass = new Cart("cart-class");
 const bussinessCart = new Cart("business-cart");

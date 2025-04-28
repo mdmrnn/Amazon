@@ -1,5 +1,5 @@
 import { delivaryOptions } from "./delivaryOptions.js";
-export let cart;
+let cart;
 export function loadFromStorage() {
   cart = JSON.parse(localStorage.getItem("cart")) || [
     {
@@ -15,17 +15,23 @@ export function loadFromStorage() {
   ];
 }
 loadFromStorage();
-
+/*
 export async function loadCartFetch() {
-  let promise;
-  try {
-    promise = await fetch("https://supersimplebackend.dev/cart");
-    console.log("cart loaded");
-  } catch {
-    console.log("UnExpected Error has occured. Please try again later");
-  }
+  const promise = await fetch("https://supersimplebackend.dev/cart")
+    .then((response) => {
+      console.log(response);
+      console.log(response.json());
+      return response.json();
+    })
+    .then((cart) => {
+      console.log(cart);
+    })
+    .catch((error) => {
+      console.log("UnExpected Error has occured. Please try again later");
+    });
   return promise;
 }
+  */
 
 function saveToStorage() {
   localStorage.setItem("cart", JSON.stringify(cart));

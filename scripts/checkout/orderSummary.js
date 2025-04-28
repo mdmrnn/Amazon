@@ -1,4 +1,4 @@
-import { cart } from "../../data/cart-class.js";
+import { cartClass } from "../../data/cart-class.js";
 import { formatCurrency } from "../utils/money.js";
 import { products } from "../../data/products.js";
 import {
@@ -6,11 +6,10 @@ import {
   createDelivaryDate,
 } from "../../data/delivaryOptions.js";
 import { renderPaymentSummary } from "./paymentSummary.js";
-import renderCheckoutHeader from "./header.js";
 
 export function renderOrderSummary() {
   let orderSummaryHtml = ``;
-  cart.cartItem.forEach((cartItem) => {
+  cartClass.cartItem.forEach((cartItem) => {
     const cartProduct = findProduct(cartItem.productId);
     orderSummaryHtml += `
       <div class="cart-item-container js-cart-item-container js-cart-item-container-${
@@ -119,10 +118,12 @@ export function renderOrderSummary() {
   document.querySelectorAll(".js-delete-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       const { productId } = btn.dataset;
-      cart.removeFromCart(productId);
-      renderCheckoutHeader(cart.cartQuantity);
+      cartClass.removeFromCart(productId);
       renderOrderSummary();
       renderPaymentSummary();
+      document.querySelector(
+        ".js-return-to-home-quantity"
+      ).innerHTML = `${cartClass.cartQuantity} items`;
     });
   });
   document.querySelectorAll(".js-update-btn").forEach((btn) => {
@@ -140,18 +141,22 @@ export function renderOrderSummary() {
         document.querySelector(`.js-quantity-input-${productId}`).value
       );
       if (updateQuan > 0 && updateQuan <= 1000) {
-        cart.updateQuantity(productId, updateQuan);
+        cartClass.updateQuantity(productId, updateQuan);
         renderOrderSummary();
         renderPaymentSummary();
-        renderCheckoutHeader(cart.cartQuantity);
+        document.querySelector(
+          ".js-return-to-home-quantity"
+        ).innerHTML = `${cartClass.cartQuantity} items`;
         document
           .querySelector(`.js-cart-item-container-${productId}`)
           .classList.remove("is-edditing-quantity");
       } else if (updateQuan === 0) {
-        cart.removeFromCart(productId);
+        cartClass.removeFromCart(productId);
         renderOrderSummary();
         renderPaymentSummary();
-        renderCheckoutHeader(cart.cartQuantity);
+        document.querySelector(
+          ".js-return-to-home-quantity"
+        ).innerHTML = `${cartClass.cartQuantity} items`;
       } else {
         document.querySelector(`.js-quantity-label-${productId}`).innerHTML =
           "Not a Valid Quantity";
@@ -169,18 +174,22 @@ export function renderOrderSummary() {
           document.querySelector(`.js-quantity-input-${productId}`).value
         );
         if (updateQuan > 0 && updateQuan <= 1000) {
-          cart.updateQuantity(productId, updateQuan);
+          cartClass.updateQuantity(productId, updateQuan);
           renderOrderSummary();
           renderPaymentSummary();
-          renderCheckoutHeader(cart.cartQuantity);
+          document.querySelector(
+            ".js-return-to-home-quantity"
+          ).innerHTML = `${cartClass.cartQuantity} items`;
           document
             .querySelector(`.js-cart-item-container-${productId}`)
             .classList.remove("is-edditing-quantity");
         } else if (updateQuan === 0) {
-          cart.removeFromCart(productId);
+          cartClass.removeFromCart(productId);
           renderOrderSummary();
           renderPaymentSummary();
-          renderCheckoutHeader(cart.cartQuantity);
+          document.querySelector(
+            ".js-return-to-home-quantity"
+          ).innerHTML = `${cartClass.cartQuantity} items`;
         } else {
           document.querySelector(`.js-quantity-label-${productId}`).innerHTML =
             "Not a Valid Quantity";
@@ -194,7 +203,7 @@ export function renderOrderSummary() {
   document.querySelectorAll(".js-delivary-option").forEach((element) => {
     element.addEventListener("click", () => {
       const { cartItemId, delivaryOptionId } = element.dataset;
-      cart.updateDelivaryOption(cartItemId, delivaryOptionId);
+      cartClass.updateDelivaryOption(cartItemId, delivaryOptionId);
       renderOrderSummary();
       renderPaymentSummary();
     });

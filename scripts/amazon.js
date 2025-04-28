@@ -1,4 +1,4 @@
-import { cart } from "../data/cart-class.js";
+import { cartClass } from "../data/cart-class.js";
 import { products, loadProductsFetch } from "../data/products.js";
 
 //loadProducts(renderProductsGrid);
@@ -7,7 +7,9 @@ loadProductsFetch().then(() => {
   renderProductsGrid();
 });
 */
+//console.log(cart);
 renderProductsGrid();
+
 async function renderProductsGrid() {
   try {
     await loadProductsFetch();
@@ -75,22 +77,23 @@ async function renderProductsGrid() {
 
   document.querySelector(
     ".js-cart-quantity"
-  ).innerHTML = `${cart.cartQuantity}`;
+  ).innerHTML = `${cartClass.cartQuantity}`;
+  //console.log(cart);
 
   document.querySelectorAll(".js-add-to-cart-btn").forEach((button) => {
     button.addEventListener("click", () => {
       const productId = button.dataset.productId;
-      cart.addToCart(productId);
+      cartClass.addToCart(productId);
       document.querySelector(
         ".js-cart-quantity"
-      ).innerHTML = `${cart.cartQuantity}`;
+      ).innerHTML = `${cartClass.cartQuantity}`;
     });
   });
 }
 
 export function calcCartItemsCost() {
   let cartItemsCost = 0;
-  cart.cartItem.forEach((cartItem) => {
+  cartClass.cartItem.forEach((cartItem) => {
     const cartProduct = findProduct(cartItem.productId);
     cartItemsCost += Number(cartProduct.priceCents / 100).toFixed(2);
   });
