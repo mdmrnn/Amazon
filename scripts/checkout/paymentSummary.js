@@ -41,40 +41,29 @@ export function renderPaymentSummary() {
   </div>
   `;
   document.querySelector(".js-payment-summary").innerHTML = paymentSummaryHtml;
+}
 
-  function calcItemsCost() {
-    let itemsCostCents = 0;
-    cartClass.cartItem.forEach((cartItem) => {
-      const cartProduct = findProduct(cartItem.productId);
-      itemsCostCents += cartProduct.priceCents * cartItem.quantity;
-    });
-    return itemsCostCents;
-  }
+function calcItemsCost() {
+  let itemsCostCents = 0;
+  cartClass.cartItem.forEach((cartItem) => {
+    const cartProduct = findProduct(cartItem.productId);
+    itemsCostCents += cartProduct.priceCents * cartItem.quantity;
+  });
+  return itemsCostCents;
+}
 
-  function calcShippingCost() {
-    let shippingCostCents = 0;
-    cartClass.cartItem.forEach((cartItem) => {
-      const cartDelivaryOption = findDelivaryOption(cartItem.delivaryOptionId);
-      shippingCostCents += cartDelivaryOption.priceCents;
-    });
-    return shippingCostCents;
-  }
-
-  function findProduct(productId) {
-    let matchingItem = "";
-    products.forEach((product) => {
-      if (product.id === productId) matchingItem = product;
-    });
-    return matchingItem;
-  }
-
-  console.log(cartClass);
+function calcShippingCost() {
+  let shippingCostCents = 0;
+  cartClass.cartItem.forEach((cartItem) => {
+    const cartDelivaryOption = findDelivaryOption(cartItem.delivaryOptionId);
+    shippingCostCents += cartDelivaryOption.priceCents;
+  });
+  return shippingCostCents;
 }
 
 document
   .querySelector(".js-place-order-btn")
   .addEventListener("click", async () => {
-    //console.log(cartClass.cartItem);
     try {
       const response = await fetch("https://supersimplebackend.dev/orders", {
         method: "POST",
@@ -93,6 +82,14 @@ document
     }
     window.location.href = "orders.html";
   });
+
+function findProduct(productId) {
+  let matchingItem = "";
+  products.forEach((product) => {
+    if (product.id === productId) matchingItem = product;
+  });
+  return matchingItem;
+}
 
 function addOrder(order) {
   orders.unshift(order);
