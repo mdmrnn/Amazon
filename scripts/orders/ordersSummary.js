@@ -11,7 +11,7 @@ export function renderOrderContainer() {
 
   orders.forEach((order) => {
     document.querySelector(
-      ".orders-grid"
+      ".js-orders-grid"
     ).innerHTML += `<div class="order-container js-order-container-${order.id}"></div>`;
   });
 
@@ -57,7 +57,7 @@ export function renderOrderContainer() {
         </div>
 
         <div class="product-actions">
-          <a href="tracking.html">
+          <a href="tracking.html?orderId=${order.id}&productId=${product.productId}">
             <button class="track-package-button button-secondary">
               Track package
             </button>
