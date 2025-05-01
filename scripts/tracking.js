@@ -1,28 +1,17 @@
 import { cartClass } from "../data/cart-class.js";
 import { orders } from "./orders/ordersSummary.js";
 import { products, loadProductsFetch } from "../data/products.js";
+import dayjs from "https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js";
 
 function trackingSummary() {
   const url = new URL(window.location.href);
   const orderId = url.searchParams.get("orderId");
   const productId = url.searchParams.get("productId");
-  //console.log(productId);
-  //console.log(orderId);
   const order = findOrder(orderId);
   const product = findProduct(productId);
 
-  function findOrderProduct(Id) {
-    let matchingItem = "";
-    order.products.forEach((element) => {
-      if (element.productId === Id) matchingItem = element;
-    });
-    return matchingItem;
-  }
-
-  const orderProduct = findOrderProduct(productId);
-  //console.log(product);
-  console.log(orderProduct);
-  const delivaryTime = orderProduct.estimatedDeliveryTime;
+  const orderProduct = findOrderProduct(productId, order);
+  const delivaryTime = formatTime(orderProduct.estimatedDeliveryTime);
   document.querySelector(".js-order-tracking").innerHTML = `
     <a class="back-to-orders-link link-primary" href="orders.html">
       View all orders
@@ -63,6 +52,14 @@ async function renderTracking() {
 
 renderTracking();
 
+function findOrderProduct(Id, order) {
+  let matchingItem = "";
+  order.products.forEach((element) => {
+    if (element.productId === Id) matchingItem = element;
+  });
+  return matchingItem;
+}
+
 function findOrder(orderId) {
   let matchingOrder;
   orders.forEach((order) => {
@@ -77,4 +74,8 @@ function findProduct(Id) {
     if (product.id === Id) matchingItem = product;
   });
   return matchingItem;
+}
+
+function formatTime(time) {
+  return dayjs(time).format("dddd, MMMM D");
 }
