@@ -166,6 +166,7 @@ export function renderOrderSummary() {
       }
     });
   });
+
   document.querySelectorAll(".js-quantity-input").forEach((inp) => {
     inp.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
@@ -200,6 +201,7 @@ export function renderOrderSummary() {
       }
     });
   });
+
   document.querySelectorAll(".js-delivary-option").forEach((element) => {
     element.addEventListener("click", () => {
       const { cartItemId, delivaryOptionId } = element.dataset;

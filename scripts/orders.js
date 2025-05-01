@@ -6,10 +6,6 @@ renderOrderPage();
 
 async function renderOrderPage() {
   await loadProductsFetch();
-
-  document.querySelector(".js-cart-quantity").innerHTML =
-    cartClass.cartQuantity;
-
   renderOrderContainer();
 }
 

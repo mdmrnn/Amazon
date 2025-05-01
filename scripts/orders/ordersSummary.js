@@ -1,13 +1,18 @@
 import { formatCurrency } from "../utils/money.js";
 import { products } from "../../data/products.js";
+import { cartClass } from "../../data/cart-class.js";
+import dayjs from "https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js";
 
 export const orders = JSON.parse(localStorage.getItem("orders")) || [];
 
-//console.log(orders);
+console.log(orders);
 
 export function renderOrderContainer() {
   let orderHeaderHtml = ``;
   let orderDetailHtml = ``;
+
+  document.querySelector(".js-cart-quantity").innerHTML =
+    cartClass.cartQuantity;
 
   orders.forEach((order) => {
     document.querySelector(
@@ -21,7 +26,7 @@ export function renderOrderContainer() {
         <div class="order-header-left-section">
           <div class="order-date">
             <div class="order-header-label">Order Placed:</div>
-            <div>${order.orderTime}</div>
+            <div>${formatTime(order.orderTime)}</div>
           </div>
           <div class="order-total">
             <div class="order-header-label">Total:</div>
@@ -48,16 +53,22 @@ export function renderOrderContainer() {
           <div class="product-name">
             ${orderProduct.name}
           </div>
-          <div class="product-delivery-date">Arriving on: ${product.estimatedDeliveryTime}</div>
+          <div class="product-delivery-date">Arriving on: ${formatTime(
+            product.estimatedDeliveryTime
+          )}</div>
           <div class="product-quantity">Quantity: ${product.quantity}</div>
-          <button class="buy-again-button button-primary">
+          <button class="buy-again-button button-primary js-buy-again-btn-${
+            product.productId
+          }-${order.id}">
             <img class="buy-again-icon" src="images/icons/buy-again.png" />
             <span class="buy-again-message">Buy it again</span>
           </button>
         </div>
 
         <div class="product-actions">
-          <a href="tracking.html?orderId=${order.id}&productId=${product.productId}">
+          <a href="tracking.html?orderId=${order.id}&productId=${
+        product.productId
+      }">
             <button class="track-package-button button-secondary">
               Track package
             </button>
@@ -65,8 +76,23 @@ export function renderOrderContainer() {
         </div>
       </div>
       `;
+
       document.querySelector(`.js-order-container-${order.id}`).innerHTML +=
         orderDetailHtml;
+    });
+  });
+
+  orders.forEach((order) => {
+    order.products.forEach((product) => {
+      document
+        .querySelector(`.js-buy-again-btn-${product.productId}-${order.id}`)
+        .addEventListener("click", () => {
+          console.log(product.productId);
+          console.log(order.id);
+          cartClass.addToCart(product.productId);
+          document.querySelector(".js-cart-quantity").innerHTML =
+            cartClass.cartQuantity;
+        });
     });
   });
 }
@@ -77,4 +103,8 @@ function findProduct(Id) {
     if (product.id === Id) matchingItem = product;
   });
   return matchingItem;
+}
+
+function formatTime(time) {
+  return dayjs(time).format("dddd, MMMM D");
 }
