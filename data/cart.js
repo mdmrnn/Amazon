@@ -21,6 +21,7 @@ export async function loadCartFetch() {
     .then((response) => {
       console.log(response);
       console.log(response.json());
+      //console.log(response.text());
       return response.json();
     })
     .then((cart) => {
@@ -31,8 +32,7 @@ export async function loadCartFetch() {
     });
   return promise;
 }
-  */
-
+*/
 function saveToStorage() {
   localStorage.setItem("cart", JSON.stringify(cart));
 }

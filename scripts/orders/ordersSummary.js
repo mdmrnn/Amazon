@@ -3,7 +3,7 @@ import { products } from "../../data/products.js";
 
 export const orders = JSON.parse(localStorage.getItem("orders")) || [];
 
-console.log(orders);
+//console.log(orders);
 
 export function renderOrderContainer() {
   let orderHeaderHtml = ``;
