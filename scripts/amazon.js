@@ -8,6 +8,7 @@ loadProductsFetch().then(() => {
 });
 */
 //console.log(cart);
+
 renderProductsGrid();
 
 async function renderProductsGrid() {
@@ -18,6 +19,26 @@ async function renderProductsGrid() {
   }
   let ProductsHTML = ``;
   products.forEach((product) => {
+    const url = new URL(window.location.href);
+    const searchParam = url.searchParams.get("search");
+    const productName = product.name;
+    const keyWords = product.keywords;
+
+    if (searchParam || searchParam === 0) {
+      let searchkey = 0;
+      keyWords.forEach((keyword) => {
+        if (keyword.toLowerCase().includes(searchParam.toLowerCase()))
+          searchkey = 1;
+      });
+      if (
+        !(
+          productName.toLowerCase().includes(searchParam.toLowerCase()) ||
+          searchkey
+        )
+      )
+        return;
+    }
+
     ProductsHTML += `
   <div class="product-container">
     <div class="product-image-container">
@@ -89,6 +110,27 @@ async function renderProductsGrid() {
       ).innerHTML = `${cartClass.cartQuantity}`;
     });
   });
+}
+
+document.querySelector(".js-search-button").addEventListener("click", () => {
+  searchBar();
+  renderProductsGrid();
+});
+
+document
+  .querySelector(".js-search-bar")
+  .addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      searchBar();
+      renderProductsGrid();
+    }
+  });
+
+function searchBar() {
+  if (document.querySelector(".js-search-bar").value)
+    window.location.href = `amazon.html?search=${
+      document.querySelector(".js-search-bar").value
+    }`;
 }
 
 export function calcCartItemsCost() {
